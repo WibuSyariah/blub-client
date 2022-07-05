@@ -28,3 +28,34 @@ export const getPosts = (posts) => {
     }
   };
 };
+
+export const addPost = (content) => {
+  return async (dispatch) => {
+    try {
+      const response = await fetch(`${BASE_URL}/posts`, {
+        method: "POST",
+        headers: {
+          access_token: localStorage.getItem("access_token"),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(content),
+      });
+
+      if (!response.ok) {
+        return await response.json().then((err) => {
+          throw err;
+        });
+      }
+
+      const data = await response.json();
+
+      return data;
+    } catch (error) {
+      MySwal.fire({
+        title: "Error",
+        text: error.message,
+        icon: "error",
+      });
+    }
+  };
+};
